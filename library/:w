@@ -1,0 +1,23 @@
+from django.test import TestCase
+from django.test.client import Client
+from django.test.client import RequestFactory
+
+from users.models import User
+
+class UserTest(TestCase):
+    """ User model tests """
+    def test_str(self):
+        user =  User(first_name = "Vivek", last_name = "Agarwal")
+        self.assertEquals(
+                str(user),
+                'Vivek Agarwal'
+        )
+
+
+class UserListViewTest(TestCase):
+    client = Client()
+    response = client.get('/')
+    self.assertEquals(list(response.context['object_list']), [])
+    User.objects.create(first_name = 'Vivek', last_name = 'Agarwal')
+    response = client.get('/')
+    self.assertEquals(response.context['object_list'].count())
